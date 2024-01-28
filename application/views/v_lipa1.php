@@ -7,7 +7,7 @@
 				<div class="container-fluid">
 					<div class="row mb-2">
 						<div class="col-sm-6">
-							<h5>Laporan E-Court</h5>
+							<h5>Laporan LIPA 1</h5>
 						</div>
 						<div class="col-sm-6">
 							<ol class="breadcrumb float-sm-right">
@@ -60,6 +60,12 @@
 											<option value="2025" <?php echo (isset($_POST['lap_tahun']) && $_POST['lap_tahun'] === '2025') ? 'selected' : ''; ?>>2025</option>
 										</select>
 										<input class="btn btn-primary" type="submit" name="btn" value="Tampilkan" />
+										<!-- Menggunakan tag <a> -->
+										
+										<!-- Menggunakan tag <button> -->
+										
+										<input class="btn btn-success" type="button" name="btn" value="Export to Excel" onclick="window.location.href='<?php echo base_url() ?>index.php/Lipa1/generateExcelDocument'" />
+
 
 								</div>
 								<!-- /.card-header -->
@@ -86,8 +92,11 @@
 											</tr>
 										</thead>
 										<tbody>
-											<?php foreach ($datafilter as $item) : ?>
+											<?php
+											$no = 1;
+											foreach ($datafilter as $item) : ?>
 												<tr>
+													<td><?php echo $no++ ?></td>
 													<td><?php echo $item->nomor_perkara; ?></td>
 													<td><?php echo $item->jenis_perkara_nama; ?></td>
 													<td><?php echo str_replace('</br>', ', ', $item->majelis_hakim_nama); ?></td>
@@ -97,6 +106,7 @@
 													<td><?php echo $item->penetapan_hari_sidang; ?></td>
 													<td><?php echo $item->sidang_pertama; ?></td>
 													<td><?php echo $item->tanggal_putusan; ?></td>
+													<td><?php echo $item->status_putusan_nama; ?></td>
 													<td><?php echo $item->pekerjaan; ?></td>
 													<td>
 														<?php
