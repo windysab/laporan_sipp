@@ -12,6 +12,7 @@ class Lipa1 extends CI_Controller
 	{
 		parent::__construct();
 		$this->load->model("M_lipa1");
+
 		$this->excel = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
 	}
 
@@ -29,96 +30,29 @@ class Lipa1 extends CI_Controller
 		$this->load->view('template/new_footer');
 	}
 
+	
 
 
-	// public function generateExcelDocument()
-	// {
-	// 	$spreadsheet = new Spreadsheet();
-	// 	$lap_bulan = $this->input->post('lap_bulan');
-	// 	$lap_tahun = $this->input->post('lap_tahun');
-	// 	$jenis_perkara = $this->input->post('jenis_perkara');
-	// 	$data['datafilter'] = $this->M_lipa1->getData($lap_tahun, $lap_bulan, $jenis_perkara);
-	// 	$spreadsheet->setActiveSheetIndex(0);
-	// 	$spreadsheet->getActiveSheet()->setTitle('Laporan');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('A1', 'Laporan Lipa1 ' . $lap_bulan . '-' . $lap_tahun);
-	// 	$spreadsheet->getActiveSheet()->setCellValue('A2', 'No');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('B2', 'NOMOR PERKARA');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('C2', 'JENIS PERKARA');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('D2', 'MAJELIS HAKIM');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('E2', 'PANITERA PENGANTI');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('F2', 'PANITERA');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('G2', 'TANGGAL PENDAFTARAN');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('H2', 'PENETAPAN MAJELIS HAKIM');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('I2', 'PENETAPAN HARI SIDANG');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('J2', 'SIDANG PERTAMA');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('K2', 'TANGGAL PUTUSAN');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('L2', 'STATUS PUTUSAN');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('M2', 'PEKERJAAN');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('N2', 'ALAMAT PIHAK 2');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('O2', 'PRODEO');
-	// 	$spreadsheet->getActiveSheet()->setCellValue('P2', 'EMAIL PIHAK 1');
-
-
-	// 	// ... (the rest of your code remains unchanged)
-
-
-
-	// 	$no = 3;
-
-	// 	foreach ($data['datafilter'] as $row) {
-	// 		$spreadsheet->getActiveSheet()->setCellValue('A' . $no, $no - 2);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('B' . $no, $row->nomor_perkara);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('D' . $no, $row->jenis_perkara_nama);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('E' . $no, $row->nomor_perkara);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('F' . $no, $row->tanggal_pendaftaran);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('G' . $no, $row->majelis_hakim_nama);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('H' . $no, $row->panitera_pengganti_text);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('I' . $no, $row->panitera_pengganti_text);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('J' . $no, $row->tanggal_pendaftaran);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('K' . $no, $row->penetapan_majelis_hakim);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('L' . $no, $row->penetapan_hari_sidang);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('M' . $no, $row->sidang_pertama);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('N' . $no, $row->tanggal_putusan);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('O' . $no, $row->status_putusan_nama);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('P' . $no, $row->pekerjaan);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('Q' . $no, $row->alamat_pihak2);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('R' . $no, $row->prodeo);
-	// 		$spreadsheet->getActiveSheet()->setCellValue('S' . $no, $row->email_pihak1);
-	// 		$no++;
-
-
-
-	// 		// ... (the rest of your code remains unchanged)
-
-	// 	}
-
-	// 	// ... (the rest of your code remains unchanged)
-	// 	$filename = 'Laporan Lipa1 ' . $lap_bulan . '-' . $lap_tahun . '.xls';
-
-	// 	header('Content-Type: application/vnd.ms-excel');
-	// 	header('Content-Disposition: attachment;filename="' . $filename . '"');
-	// 	header('Cache-Control: max-age=0');
-
-	// 	$objWriter = IOFactory::createWriter($spreadsheet, 'Xls');
-	// 	ob_end_clean();
-	// 	$objWriter->save('php://output');
-	// }
 
 	public function generateExcelDocument()
 	{
-		// Load PhpSpreadsheet library
-		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
-		$sheet = $spreadsheet->getActiveSheet();
+		ini_set('display_errors', 1);
+		ini_set('display_startup_errors', 1);
+		error_reporting(E_ALL);
+
+		$jenis_perkara = $this->input->post('jenis_perkara'); // Get the selected value
 		$lap_bulan = $this->input->post('lap_bulan');
 		$lap_tahun = $this->input->post('lap_tahun');
-		$jenis_perkara = $this->input->post('jenis_perkara');
+		
+		$data = $this->M_lipa1->getData($lap_tahun, $lap_bulan, $jenis_perkara);
+
 		
 
+		$spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+		$sheet = $spreadsheet->getActiveSheet();
+		// Set document properties
 
 
-		// Get data from view
-		// $data = $this->M_lipa1->getData('2024', '02', 'Pdt.G');
-		$data = $this->M_lipa1->getData($lap_tahun, $lap_bulan, $jenis_perkara);
 		$spreadsheet->getActiveSheet()->setTitle('Laporan');
 		$spreadsheet->getActiveSheet()->setCellValue('A1', 'Laporan Lipa1 ' . $lap_bulan . '-' . $lap_tahun);
 		$spreadsheet->getActiveSheet()->setCellValue('A2', 'No');
@@ -138,47 +72,49 @@ class Lipa1 extends CI_Controller
 		$spreadsheet->getActiveSheet()->setCellValue('O2', 'PRODEO');
 		$spreadsheet->getActiveSheet()->setCellValue('P2', 'EMAIL PIHAK 1');
 
-
-
-
 		// Write data to Excel file
-		$no = 3; // Start from the third row
+		// Starting from row 3, since the first two rows are for headers
+		$row = 3;
 		foreach ($data as $item) {
-			$sheet->setCellValue('A' . $no, $no - 2);
-			$sheet->setCellValue('B' . $no, $item->nomor_perkara);
-			$sheet->setCellValue('C' . $no, $item->jenis_perkara_nama);
-			$sheet->setCellValue('D' . $no, $item->majelis_hakim_nama);
-			$sheet->setCellValue('E' . $no, $item->panitera_pengganti_text);
-			$sheet->setCellValue('F' . $no, $item->tanggal_pendaftaran);
-			$sheet->setCellValue('G' . $no, $item->penetapan_majelis_hakim);
-			$sheet->setCellValue('H' . $no, $item->penetapan_hari_sidang);
-			$sheet->setCellValue('I' . $no, $item->sidang_pertama);
-			$sheet->setCellValue('J' . $no, $item->tanggal_putusan);
-			$sheet->setCellValue('K' . $no, $item->status_putusan_nama);
-			$sheet->setCellValue('L' . $no, $item->pekerjaan);
-			$sheet->setCellValue('M' . $no, $item->alamat_pihak2);
-			$sheet->setCellValue('N' . $no, $item->prodeo);
-			$sheet->setCellValue('O' . $no, $item->email_pihak1);
-
-
-			// ... Write the rest of the data ...
-
-			$no++;
+			$spreadsheet->getActiveSheet()->setCellValue('A' . $row, $item->nomor_perkara);
+			$spreadsheet->getActiveSheet()->setCellValue('B' . $row, $item->jenis_perkara_nama);
+			$spreadsheet->getActiveSheet()->setCellValue('C' . $row, $item->majelis_hakim_nama);
+			$spreadsheet->getActiveSheet()->setCellValue('D' . $row, $item->panitera_pengganti_text);
+			$spreadsheet->getActiveSheet()->setCellValue('E' . $row, $item->tanggal_pendaftaran);
+			$spreadsheet->getActiveSheet()->setCellValue('F' . $row, $item->penetapan_majelis_hakim);
+			$spreadsheet->getActiveSheet()->setCellValue('G' . $row, $item->penetapan_hari_sidang);
+			$spreadsheet->getActiveSheet()->setCellValue('H' . $row, $item->sidang_pertama);
+			$spreadsheet->getActiveSheet()->setCellValue('I' . $row, $item->tanggal_putusan);
+			$spreadsheet->getActiveSheet()->setCellValue('J' . $row, $item->status_putusan_nama);
+			$spreadsheet->getActiveSheet()->setCellValue('K' . $row, $item->pekerjaan);
+			$spreadsheet->getActiveSheet()->setCellValue('L' . $row, $item->alamat_pihak2);
+			$spreadsheet->getActiveSheet()->setCellValue('M' . $row, $item->prodeo);
+			$spreadsheet->getActiveSheet()->setCellValue('N' . $row, $item->email_pihak1);
+			// ... continue for the rest of your columns
+			$row++;
 		}
 
-		// Save Excel file
 
-		$filename = 'Laporan Lipa1 ' . $lap_bulan . '-' . $lap_tahun . '.xls';
+		// // Save Excel file
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+		$filename = 'Laporan Lipa1 ' . $lap_bulan . '-' . $lap_tahun . '.xlsx';
+		$writer->save($filename);
 
-		header('Content-Type: application/vnd.ms-excel');
-		header('Content-Disposition: attachment;filename="' . $filename . '"');
-		header('Cache-Control: max-age=0');
+		// Save Excel file to a temporary file
+		$writer = IOFactory::createWriter($spreadsheet, 'Xlsx');
+		$temp_file = tempnam(sys_get_temp_dir(), 'laporan');
+		$writer->save($temp_file);
+		$filename = 'Laporan Lipa1 ' . $lap_bulan . '-' . $lap_tahun . '.xlsx';
 
+		// Send headers and file to browser
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+		header('Content-Disposition: attachment; filename="' . $filename . '"');
+		readfile($temp_file);
 
+		// Delete temporary file
+		unlink($temp_file);
 
-		$objWriter = IOFactory::createWriter($spreadsheet, 'Xls');
-		ob_end_clean();
-		$objWriter->save('php://output');
-		
+		// Stop script execution
+		exit;
 	}
 }

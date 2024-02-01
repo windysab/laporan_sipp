@@ -25,14 +25,28 @@
 						<div class="col-12">
 							<div class="card">
 								<div class="card-header">
+								
+									<?php
+									if (isset($_POST['btn'])) {
+									
+										$jenis_perkara = $this->input->post('jenis_perkara'); // Get the selected value
+										$lap_bulan = $this->input->post('lap_bulan');
+										$lap_tahun = $this->input->post('lap_tahun');
+										$data = $this->M_lipa1->getData($lap_tahun, $lap_bulan, $jenis_perkara);
+										$result = $this->M_lipa1->getJumlah($lap_tahun, $lap_bulan, $jenis_perkara);
+										$resultPensiunan = $this->M_lipa1->getJumlahPensiunan($lap_tahun, $lap_bulan, $jenis_perkara);
+									} else {
+										
+									}
+									?>
 									<form action="<?php echo base_url() ?>index.php/Lipa1" method="POST">
 										Jenis Perkara :
-										<select name="jenis_perkara" required="">
+										<select name="jenis_perkara" required>
 											<option value="Pdt.G" <?php echo (isset($_POST['jenis_perkara']) && $_POST['jenis_perkara'] === 'Pdt.G') ? 'selected' : ''; ?>>Pdt.G</option>
 											<option value="Pdt.P" <?php echo (isset($_POST['jenis_perkara']) && $_POST['jenis_perkara'] === 'Pdt.P') ? 'selected' : ''; ?>>Pdt.P</option>
 										</select>
 										Laporan Bulan :
-										<select name="lap_bulan" required="">
+										<select name="lap_bulan" required>
 											<option value="01" <?php echo (isset($_POST['lap_bulan']) && $_POST['lap_bulan'] === '01') ? 'selected' : ''; ?>>Januari</option>
 											<option value="02" <?php echo (isset($_POST['lap_bulan']) && $_POST['lap_bulan'] === '02') ? 'selected' : ''; ?>>Februari</option>
 											<option value="03" <?php echo (isset($_POST['lap_bulan']) && $_POST['lap_bulan'] === '03') ? 'selected' : ''; ?>>Maret</option>
@@ -47,7 +61,7 @@
 											<option value="12" <?php echo (isset($_POST['lap_bulan']) && $_POST['lap_bulan'] === '12') ? 'selected' : ''; ?>>Desember</option>
 										</select>
 										Tahun :
-										<select name="lap_tahun" required="">
+										<select name="lap_tahun" required>
 											<option value="2016" <?php echo (isset($_POST['lap_tahun']) && $_POST['lap_tahun'] === '2016') ? 'selected' : ''; ?>>2016</option>
 											<option value="2017" <?php echo (isset($_POST['lap_tahun']) && $_POST['lap_tahun'] === '2017') ? 'selected' : ''; ?>>2017</option>
 											<option value="2018" <?php echo (isset($_POST['lap_tahun']) && $_POST['lap_tahun'] === '2018') ? 'selected' : ''; ?>>2018</option>
@@ -59,90 +73,93 @@
 											<option value="2024" <?php echo (isset($_POST['lap_tahun']) && $_POST['lap_tahun'] === '2024') ? 'selected' : ''; ?>>2024</option>
 											<option value="2025" <?php echo (isset($_POST['lap_tahun']) && $_POST['lap_tahun'] === '2025') ? 'selected' : ''; ?>>2025</option>
 										</select>
+
 										<input class="btn btn-primary" type="submit" name="btn" value="Tampilkan" />
+										<input class="btn btn-success" type="button" name="btn" value="Export to Excel2" onclick="href='<?php echo base_url() ?>index.php/Lipa1'" />
+
+
+
 										<!-- Menggunakan tag <a> -->
-										
-										<!-- Menggunakan tag <button> -->
-										
+
+
 										<input class="btn btn-success" type="button" name="btn" value="Export to Excel" onclick="window.location.href='<?php echo base_url() ?>index.php/Lipa1/generateExcelDocument'" />
 
 
-								</div>
-								<!-- /.card-header -->
-								<div class="card-body">
-									<table class="table table-bordered table-striped" id="example1">
-										<thead>
-											<tr>
-												<th>No</th>
-												<th>Nomor Perkara</th>
-												<th>Kode Perkara</th>
-												<th>Majelis Hakim Nama</th>
-												<th>Panitera Pengganti Text</th>
-												<th>Tanggal Pendaftaran</th>
-												<th>Penetapan Majelis Hakim</th>
-												<th>Penetapan Hari Sidang</th>
-												<th>Sidang Pertama</th>
-												<th>Tanggal Putusan</th>
-												<th>Status Putusan</th>
-												<th>Status Pekerjaan</th>
-												<th>Keterangan</th>
-												<th>alamat gaib</th>
-												<th>prodeo</th>
-												<th>perkara ecourt</th>
-											</tr>
-										</thead>
-										<tbody>
-											<?php
-											$no = 1;
-											foreach ($datafilter as $item) : ?>
-												<tr>
-													<td><?php echo $no++ ?></td>
-													<td><?php echo $item->nomor_perkara; ?></td>
-													<td><?php echo $item->jenis_perkara_nama; ?></td>
-													<td><?php echo str_replace('</br>', ', ', $item->majelis_hakim_nama); ?></td>
-													<td><?php echo $item->panitera_pengganti_text; ?></td>
-													<td><?php echo $item->tanggal_pendaftaran; ?></td>
-													<td><?php echo $item->penetapan_majelis_hakim; ?></td>
-													<td><?php echo $item->penetapan_hari_sidang; ?></td>
-													<td><?php echo $item->sidang_pertama; ?></td>
-													<td><?php echo $item->tanggal_putusan; ?></td>
-													<td><?php echo $item->status_putusan_nama; ?></td>
-													<td><?php echo $item->pekerjaan; ?></td>
-													<td>
-														<?php
-														if (strpos($item->pekerjaan, 'PNS') !== false || strpos($item->pekerjaan, 'Pegawai Negeri Sipil') !== false) {
-															echo "* *";
-														} elseif (strpos($item->pekerjaan, 'Pensiunan') !== false) {
-															echo "#";
-														} else {
-															echo '';
-														}
-														?>
-													</td>
-													<td><?php echo $item->alamat_pihak2; ?></td>
-													<td><?php echo ($item->prodeo == 1) ? '#' : ''; ?></td>
-													<td><?php echo $item->email_pihak1; ?></td>
-												</tr>
-											<?php endforeach; ?>
+										<!-- /.card-header -->
+										<div class="card-body">
+											<table class="table table-bordered table-striped" id="example1">
+												<thead>
+													<tr>
+														<th>No</th>
+														<th>Nomor Perkara</th>
+														<th>Kode Perkara</th>
+														<th>Majelis Hakim Nama</th>
+														<th>Panitera Pengganti Text</th>
+														<th>Tanggal Pendaftaran</th>
+														<th>Penetapan Majelis Hakim</th>
+														<th>Penetapan Hari Sidang</th>
+														<th>Sidang Pertama</th>
+														<th>Tanggal Putusan</th>
+														<th>Status Putusan</th>
+														<th>Status Pekerjaan</th>
+														<th>Keterangan</th>
+														<th>alamat gaib</th>
+														<th>prodeo</th>
+														<th>perkara ecourt</th>
+													</tr>
+												</thead>
+												<tbody>
+													<?php
+													$no = 1;
+													foreach ($datafilter as $item) : ?>
+														<tr>
+															<td><?php echo $no++ ?></td>
+															<td><?php echo $item->nomor_perkara; ?></td>
+															<td><?php echo $item->jenis_perkara_nama; ?></td>
+															<td><?php echo str_replace('</br>', ', ', $item->majelis_hakim_nama); ?></td>
+															<td><?php echo $item->panitera_pengganti_text; ?></td>
+															<td><?php echo $item->tanggal_pendaftaran; ?></td>
+															<td><?php echo $item->penetapan_majelis_hakim; ?></td>
+															<td><?php echo $item->penetapan_hari_sidang; ?></td>
+															<td><?php echo $item->sidang_pertama; ?></td>
+															<td><?php echo $item->tanggal_putusan; ?></td>
+															<td><?php echo $item->status_putusan_nama; ?></td>
+															<td><?php echo $item->pekerjaan; ?></td>
+															<td>
+																<?php
+																if (strpos($item->pekerjaan, 'PNS') !== false || strpos($item->pekerjaan, 'Pegawai Negeri Sipil') !== false) {
+																	echo "* *";
+																} elseif (strpos($item->pekerjaan, 'Pensiunan') !== false) {
+																	echo "#";
+																} else {
+																	echo '';
+																}
+																?>
+															</td>
+															<td><?php echo $item->alamat_pihak2; ?></td>
+															<td><?php echo ($item->prodeo == 1) ? '#' : ''; ?></td>
+															<td><?php echo $item->email_pihak1; ?></td>
+														</tr>
+													<?php endforeach; ?>
 
-											<?php if (empty($result)) : ?>
-												<tr>
-													<td colspan="5" class="text-center">Tidak ada data yang tersedia</td>
-												</tr>
-											<?php endif; ?>
-										</tbody>
-									</table>
+													<?php if (empty($result)) : ?>
+														<tr>
+															<td colspan="5" class="text-center">Tidak ada data yang tersedia</td>
+														</tr>
+													<?php endif; ?>
+												</tbody>
+											</table>
+										</div>
+										<!-- /.card-body -->
+									</form>
 								</div>
-								<!-- /.card-body -->
-								</form>
+								<!-- /.card -->
 							</div>
-							<!-- /.card -->
+							<!-- /.col -->
 						</div>
-						<!-- /.col -->
+						<!-- /.row -->
 					</div>
-					<!-- /.row -->
-				</div>
-				<!-- /.container-fluid -->
+					<!-- /.container-fluid -->
 			</section>
 			<!-- /.content -->
 		</div>
