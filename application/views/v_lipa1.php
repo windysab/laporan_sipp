@@ -34,10 +34,7 @@
 										$lap_tahun = $this->input->post('lap_tahun');
 										$data = $this->M_lipa1->getData($lap_tahun, $lap_bulan, $jenis_perkara);
 										$result = $this->M_lipa1->getJumlah($lap_tahun, $lap_bulan, $jenis_perkara);
-										$resultPensiunan = $this->M_lipa1->getJumlahPensiunan($lap_tahun, $lap_bulan, $jenis_perkara);
-									} else {
-										
-									}
+									} 
 									?>
 									<form action="<?php echo base_url() ?>index.php/Lipa1" method="POST">
 										Jenis Perkara :
