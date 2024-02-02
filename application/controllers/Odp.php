@@ -71,7 +71,7 @@ class Odp extends CI_Controller
 			, '10' => 'OKTOBER'
 			, '11' => 'NOVEMBER'
 			, '12' => 'DESEMBER'
-			
+
 		];
 	$sheet->setCellValue('A9', ' BULAN ' . $bulan[$lap_bulan] . ' TAHUN ' . $lap_tahun);
 
@@ -101,6 +101,8 @@ class Odp extends CI_Controller
 		// $spreadsheet->getActiveSheet()->setCellValue('D' . $row, 'Hakim Pengawas');
 		
 		// $spreadsheet->getActiveSheet()->setCellValue('D' . ($row + 6), 'PANMUD PERTANAHAN');
+		// bikin  rename sheet yang ada di excel
+		// $spreadsheet->getActiveSheet()->setTitle('Laporan');
 
 		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
 		$filename = '42. One Day Publish 1 ' . $lap_bulan . '-' . $lap_tahun . '.xlsx';
@@ -109,7 +111,7 @@ class Odp extends CI_Controller
 		header('Content-Type: application/vnd.ms-excel');
 		header('Content-Disposition: attachment;filename="' . $filename . '"');
 		header('Cache-Control: max-age=0');
-		$writer->save('php://output');
+		// $writer->save('php://output');
 
 
 	}
