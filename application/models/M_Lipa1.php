@@ -41,7 +41,8 @@ class M_lipa1 extends CI_Model
 			LEFT JOIN pihak ON perkara_pihak1.pihak_id = pihak.id
 			LEFT JOIN perkara_efiling_id ON perkara.perkara_id = perkara_efiling_id.perkara_id
 			WHERE (
-				YEAR(tanggal_pendaftaran)='$lap_tahun' AND MONTH(tanggal_pendaftaran)='$lap_bulan'
+				-- YEAR(tanggal_pendaftaran)='$lap_tahun' AND MONTH(tanggal_pendaftaran)='$lap_bulan'
+				(YEAR(tanggal_pendaftaran) < '$lap_tahun' OR (YEAR(tanggal_pendaftaran) = '$lap_tahun' AND MONTH(tanggal_pendaftaran) < 'lap_bulan')) AND tanggal_putusan IS NULL
 				OR YEAR(penetapan_majelis_hakim)='$lap_tahun' AND MONTH(penetapan_majelis_hakim)='$lap_bulan'
 				OR YEAR(penetapan_hari_sidang)='$lap_tahun' AND MONTH(penetapan_hari_sidang)='$lap_bulan'
 				OR YEAR(sidang_pertama)='$lap_tahun' AND MONTH(sidang_pertama)='$lap_bulan'
